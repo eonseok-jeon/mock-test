@@ -1,7 +1,8 @@
 import { useGetSavingProducts } from 'hooks/useGetSavingProducts';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Assets, Border, colors, ListHeader, ListRow, NavigationBar, SelectBottomSheet, Spacing, Tab } from 'tosslib';
 import { SavingsProduct } from 'types/savingProducts';
+import { roundToThousands } from 'utils/roundToThousands';
 
 export function SavingsCalculatorPage() {
   /** 목표 금액 입력 값 */
@@ -28,6 +29,29 @@ export function SavingsCalculatorPage() {
         ),
     }
   );
+
+  /** 예상 수입 금액 (= 월 납입액 * 저축 기간 * (1 + 연이자율 * 0.5)) */
+  const expectedIncomeAmount = useMemo(() => {
+    return roundToThousands(
+      (enteredMonthlyAmount ?? 0) *
+        (selectedSavingProduct?.availableTerms ?? 0) *
+        (1 + (selectedSavingProduct?.annualRate ?? 0) * 0.5)
+    );
+  }, [enteredMonthlyAmount, selectedSavingProduct]);
+
+  /** 목표 금액과의 차이 (= 목표 금액 - 예상 수익 금액) */
+  const differenceBetweenGoalAmount = useMemo(() => {
+    return roundToThousands((enteredGoalAmount ?? 0) - expectedIncomeAmount);
+  }, [enteredGoalAmount, expectedIncomeAmount]);
+
+  /** 추천 월 납입 금액 (= 목표 금액 ÷ (저축 기간 * (1 + 연이자율 * 0.5))) */
+  const recommendedMonthlyAmount = useMemo(() => {
+    return roundToThousands(
+      (enteredGoalAmount ?? 0) /
+        (selectedSavingProduct?.availableTerms ?? 0) /
+        (1 + (selectedSavingProduct?.annualRate ?? 0) * 0.5)
+    );
+  }, [enteredGoalAmount, selectedSavingProduct]);
 
   return (
     <>
@@ -108,18 +132,19 @@ export function SavingsCalculatorPage() {
                 type="2RowTypeA"
                 top="예상 수익 금액"
                 topProps={{ color: colors.grey600 }}
-                bottom={`1,000,000원`}
+                bottom={`${expectedIncomeAmount.toLocaleString()}원`}
                 bottomProps={{ fontWeight: 'bold', color: colors.blue600 }}
               />
             }
           />
+
           <ListRow
             contents={
               <ListRow.Texts
                 type="2RowTypeA"
                 top="목표 금액과의 차이"
                 topProps={{ color: colors.grey600 }}
-                bottom={`-500,000원`}
+                bottom={`${differenceBetweenGoalAmount.toLocaleString()}원`}
                 bottomProps={{ fontWeight: 'bold', color: colors.blue600 }}
               />
             }
@@ -130,7 +155,7 @@ export function SavingsCalculatorPage() {
                 type="2RowTypeA"
                 top="추천 월 납입 금액"
                 topProps={{ color: colors.grey600 }}
-                bottom={`100,000원`}
+                bottom={`${recommendedMonthlyAmount.toLocaleString()}원`}
                 bottomProps={{ fontWeight: 'bold', color: colors.blue600 }}
               />
             }
