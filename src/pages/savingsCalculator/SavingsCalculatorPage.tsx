@@ -23,6 +23,7 @@ export function SavingsCalculatorPage() {
 
       <Spacing size={16} />
 
+      {/* 목표 금액 */}
       <label htmlFor="목표 금액">목표 금액</label>
       <input
         id="목표 금액"
@@ -31,7 +32,10 @@ export function SavingsCalculatorPage() {
         value={enteredGoalAmount ?? ''}
         onChange={e => setEnteredGoalAmount(Number(e.target.value))}
       />
+
       <Spacing size={16} />
+
+      {/* 월 납입액 */}
       <label htmlFor="월 납입액">월 납입액</label>
       <input
         id="월 납입액"
@@ -40,7 +44,10 @@ export function SavingsCalculatorPage() {
         value={enteredMonthlyAmount ?? ''}
         onChange={e => setEnteredMonthlyAmount(Number(e.target.value))}
       />
+
       <Spacing size={16} />
+
+      {/* 저축 기간 */}
       <label htmlFor="저축 기간">저축 기간</label>
       <SelectBottomSheet
         title="저축 기간을 선택해주세요"
@@ -58,6 +65,7 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
+      {/* 탭 */}
       <Tab onChange={value => setSelectedTab(value as SavingsCalculatorTabType)}>
         <Tab.Item value={SAVINGS_CALCULATOR_TABS.PRODUCTS} selected={selectedTab === SAVINGS_CALCULATOR_TABS.PRODUCTS}>
           적금 상품
