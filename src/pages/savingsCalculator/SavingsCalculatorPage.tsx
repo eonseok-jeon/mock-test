@@ -3,6 +3,7 @@ import { Border, NavigationBar, SelectBottomSheet, Spacing, Tab } from 'tosslib'
 import { SavingsProduct } from 'types/savingProducts';
 import { SavingProducts } from './SavingProducts';
 import { SavingResults } from './SavingResults';
+import { SAVINGS_CALCULATOR_TABS, type SavingsCalculatorTabType } from 'constants/savingsCalculator';
 
 export function SavingsCalculatorPage() {
   /** 목표 금액 입력 값 */
@@ -12,7 +13,7 @@ export function SavingsCalculatorPage() {
   /** 저축 기간 입력 값 */
   const [enteredSavingPeriod, setEnteredSavingPeriod] = useState<number | null>(null);
   /** 선택한 탭 */
-  const [selectedTab, setSelectedTab] = useState<'products' | 'results'>('products');
+  const [selectedTab, setSelectedTab] = useState<SavingsCalculatorTabType>(SAVINGS_CALCULATOR_TABS.PRODUCTS);
   /** 선택한 적금 상품 */
   const [selectedSavingProduct, setSelectedSavingProduct] = useState<SavingsProduct | null>(null);
 
@@ -55,17 +56,17 @@ export function SavingsCalculatorPage() {
       <Border height={16} />
       <Spacing size={8} />
 
-      <Tab onChange={value => setSelectedTab(value as 'products' | 'results')}>
-        <Tab.Item value="products" selected={selectedTab === 'products'}>
+      <Tab onChange={value => setSelectedTab(value as SavingsCalculatorTabType)}>
+        <Tab.Item value={SAVINGS_CALCULATOR_TABS.PRODUCTS} selected={selectedTab === SAVINGS_CALCULATOR_TABS.PRODUCTS}>
           적금 상품
         </Tab.Item>
-        <Tab.Item value="results" selected={selectedTab === 'results'}>
+        <Tab.Item value={SAVINGS_CALCULATOR_TABS.RESULTS} selected={selectedTab === SAVINGS_CALCULATOR_TABS.RESULTS}>
           계산 결과
         </Tab.Item>
       </Tab>
 
       {/* 적금 상품 */}
-      {selectedTab === 'products' && (
+      {selectedTab === SAVINGS_CALCULATOR_TABS.PRODUCTS && (
         <SavingProducts
           enteredMonthlyAmount={enteredMonthlyAmount}
           enteredSavingPeriod={enteredSavingPeriod}
@@ -75,7 +76,7 @@ export function SavingsCalculatorPage() {
       )}
 
       {/* 계산 결과 */}
-      {selectedTab === 'results' && (
+      {selectedTab === SAVINGS_CALCULATOR_TABS.RESULTS && (
         <SavingResults
           enteredGoalAmount={enteredGoalAmount}
           enteredMonthlyAmount={enteredMonthlyAmount}
