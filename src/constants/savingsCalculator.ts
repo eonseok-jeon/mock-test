@@ -8,6 +8,7 @@ export type SavingsCalculatorTabType = (typeof SAVINGS_CALCULATOR_TABS)[keyof ty
 
 /** 저축 기간 목록 */
 export const SAVING_PERIODS = [
+  { value: null, label: '전체' },
   { value: 6, label: '6개월' },
   { value: 12, label: '12개월' },
   { value: 24, label: '24개월' },
