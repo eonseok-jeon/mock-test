@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { Assets, Border, colors, ListHeader, ListRow, Spacing } from 'tosslib';
 import { SavingsProduct } from 'types/savingProducts';
 import { roundToThousands } from 'utils/roundToThousands';
+import { EmptyResults } from './EmptyResults';
 
 /** 적금 계산 결과 컴포넌트 */
 export function SavingResults({
@@ -62,7 +63,9 @@ export function SavingResults({
 
   return (
     <>
-      {selectedSavingProduct ? (
+      {selectedSavingProduct == null ? (
+        <EmptyResults message="상품을 선택해주세요." />
+      ) : (
         <>
           <Spacing size={8} />
 
@@ -126,11 +129,6 @@ export function SavingResults({
               onClick={() => onSelectSavingProduct(product)}
             />
           ))}
-        </>
-      ) : (
-        <>
-          <Spacing size={40} />
-          <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} />
         </>
       )}
     </>
