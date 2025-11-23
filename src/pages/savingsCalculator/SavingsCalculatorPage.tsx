@@ -3,7 +3,7 @@ import { Border, NavigationBar, SelectBottomSheet, Spacing, Tab } from 'tosslib'
 import { SavingsProduct } from 'types/savingProducts';
 import { SavingProducts } from './SavingProducts';
 import { SavingResults } from './SavingResults';
-import { SAVINGS_CALCULATOR_TABS, type SavingsCalculatorTabType } from 'constants/savingsCalculator';
+import { SAVING_PERIODS, SAVINGS_CALCULATOR_TABS, type SavingsCalculatorTabType } from 'constants/savingsCalculator';
 
 export function SavingsCalculatorPage() {
   /** 목표 금액 입력 값 */
@@ -47,9 +47,11 @@ export function SavingsCalculatorPage() {
         value={enteredSavingPeriod}
         onChange={value => setEnteredSavingPeriod(value)}
       >
-        <SelectBottomSheet.Option value={6}>6개월</SelectBottomSheet.Option>
-        <SelectBottomSheet.Option value={12}>12개월</SelectBottomSheet.Option>
-        <SelectBottomSheet.Option value={24}>24개월</SelectBottomSheet.Option>
+        {SAVING_PERIODS.map(period => (
+          <SelectBottomSheet.Option key={period.value} value={period.value}>
+            {period.label}
+          </SelectBottomSheet.Option>
+        ))}
       </SelectBottomSheet>
 
       <Spacing size={24} />
