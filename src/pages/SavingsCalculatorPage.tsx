@@ -1,8 +1,28 @@
 import { useGetSavingProducts } from 'hooks/useGetSavingProducts';
+import { useState } from 'react';
 import { Assets, Border, colors, ListRow, NavigationBar, SelectBottomSheet, Spacing, Tab } from 'tosslib';
 
 export function SavingsCalculatorPage() {
-  const { data: savingProducts } = useGetSavingProducts();
+  /** 목표 금액 입력 값 */
+  const [enteredGoalAmount, setEnteredGoalAmount] = useState<number | null>(null);
+  /** 월 납입액 입력 값 */
+  const [enteredMonthlyAmount, setEnteredMonthlyAmount] = useState<number | null>(null);
+  /** 저축 기간 입력 값 */
+  const [enteredSavingPeriod, setEnteredSavingPeriod] = useState<number | null>(null);
+
+  /** 적금 상품 목록 */
+  const { data: savingProducts } = useGetSavingProducts(
+    { enteredMonthlyAmount, enteredSavingPeriod },
+    {
+      select: data =>
+        data.filter(
+          product =>
+            product.minMonthlyAmount <= (enteredMonthlyAmount ?? Infinity) &&
+            product.maxMonthlyAmount >= (enteredMonthlyAmount ?? -Infinity) &&
+            (enteredSavingPeriod ? product.availableTerms === enteredSavingPeriod : true)
+        ),
+    }
+  );
 
   return (
     <>
@@ -11,13 +31,29 @@ export function SavingsCalculatorPage() {
       <Spacing size={16} />
 
       <label htmlFor="목표 금액">목표 금액</label>
-      <input id="목표 금액" type="text" placeholder="목표 금액을 입력하세요" />
+      <input
+        id="목표 금액"
+        type="number"
+        placeholder="목표 금액을 입력하세요"
+        value={enteredGoalAmount ?? ''}
+        onChange={e => setEnteredGoalAmount(Number(e.target.value))}
+      />
       <Spacing size={16} />
       <label htmlFor="월 납입액">월 납입액</label>
-      <input id="월 납입액" type="text" placeholder="희망 월 납입액을 입력하세요" />
+      <input
+        id="월 납입액"
+        type="number"
+        placeholder="희망 월 납입액을 입력하세요"
+        value={enteredMonthlyAmount ?? ''}
+        onChange={e => setEnteredMonthlyAmount(Number(e.target.value))}
+      />
       <Spacing size={16} />
       <label htmlFor="저축 기간">저축 기간</label>
-      <SelectBottomSheet title="저축 기간을 선택해주세요" value={12} onChange={() => {}}>
+      <SelectBottomSheet
+        title="저축 기간을 선택해주세요"
+        value={enteredSavingPeriod}
+        onChange={value => setEnteredSavingPeriod(value)}
+      >
         <SelectBottomSheet.Option value={6}>6개월</SelectBottomSheet.Option>
         <SelectBottomSheet.Option value={12}>12개월</SelectBottomSheet.Option>
         <SelectBottomSheet.Option value={24}>24개월</SelectBottomSheet.Option>
