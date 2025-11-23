@@ -1,6 +1,7 @@
 import { useGetSavingProducts } from 'hooks/useGetSavingProducts';
 import { useState } from 'react';
 import { Assets, Border, colors, ListRow, NavigationBar, SelectBottomSheet, Spacing, Tab } from 'tosslib';
+import { SavingsProduct } from 'types/savingProducts';
 
 export function SavingsCalculatorPage() {
   /** 목표 금액 입력 값 */
@@ -9,6 +10,8 @@ export function SavingsCalculatorPage() {
   const [enteredMonthlyAmount, setEnteredMonthlyAmount] = useState<number | null>(null);
   /** 저축 기간 입력 값 */
   const [enteredSavingPeriod, setEnteredSavingPeriod] = useState<number | null>(null);
+  /** 선택한 적금 상품 */
+  const [selectedSavingProduct, setSelectedSavingProduct] = useState<SavingsProduct | null>(null);
 
   /** 적금 상품 목록 */
   const { data: savingProducts } = useGetSavingProducts(
@@ -86,8 +89,8 @@ export function SavingsCalculatorPage() {
               bottomProps={{ fontSize: 13, color: colors.grey600 }}
             />
           }
-          right={<Assets.Icon name="icon-check-circle-green" />}
-          onClick={() => {}}
+          right={selectedSavingProduct?.id === product.id && <Assets.Icon name="icon-check-circle-green" />}
+          onClick={() => setSelectedSavingProduct(product)}
         />
       ))}
 
