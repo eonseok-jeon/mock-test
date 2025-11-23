@@ -122,7 +122,13 @@ export function SavingsCalculatorPage() {
               />
             }
             right={selectedSavingProduct?.id === product.id && <Assets.Icon name="icon-check-circle-green" />}
-            onClick={() => setSelectedSavingProduct(product)}
+            onClick={() => {
+              if (selectedSavingProduct?.id === product.id) {
+                setSelectedSavingProduct(null);
+              } else {
+                setSelectedSavingProduct(product);
+              }
+            }}
           />
         ))}
 
